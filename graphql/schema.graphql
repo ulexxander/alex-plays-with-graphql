@@ -1,0 +1,63 @@
+scalar Time
+
+type User {
+  id: ID!
+  username: String!
+  messagesCount: Int!
+  dateCreated: Time!
+  dateUpdated: Time!
+}
+
+type Chat {
+  id: ID!
+  title: String!
+  members: [User!]!
+  membersCount: Int!
+  messages: [Message!]!
+  messageCount: Int!
+  dateCreated: Time!
+  dateUpdated: Time!
+}
+
+type Message {
+  id: ID!
+  text: String!
+  senderId: String!
+  sender: User!
+  chatId: String!
+  chat: Chat!
+  dateCreated: Time!
+}
+
+type Query {
+  allUsers: [User!]!
+  allMessages: [Message!]!
+  allChats: [Chat!]!
+}
+
+input CreateUserInput {
+  username: String!
+  password: String!
+}
+
+input SendMessageInput {
+  text: String!
+  senderId: String!
+  chatId: String!
+}
+
+input CreateChatPayload {
+  title: String!
+}
+
+input JoinChatPayload {
+  userId: String!
+  chatId: String!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput): User!
+  sendMessage(input: SendMessageInput): Message!
+  createChat(input: CreateChatPayload): Chat!
+  joinChat(input: JoinChatPayload): Chat!
+}
