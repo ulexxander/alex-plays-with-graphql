@@ -1,24 +1,12 @@
-import { useQuery } from "@urql/preact";
 import { h } from "preact";
-import { User } from "./generated/graphql";
-
-const query = `
-query GetAllUsers {
-  allUsers {
-    id
-    username
-    dateCreated
-    messagesCount
-  }
-}
-`;
+import { useGetAllUsersQuery } from "./generated/graphql";
 
 const Loading = () => {
   return <p>Loading...</p>;
 };
 
 const FirstPage = () => {
-  const [{ data, fetching }] = useQuery<User[]>({ query });
+  const [{ data, fetching }] = useGetAllUsersQuery();
 
   if (fetching) {
     return <Loading />;

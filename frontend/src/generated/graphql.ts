@@ -1,7 +1,10 @@
+import gql from 'graphql-tag';
+import * as Urql from '@urql/preact';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -98,4 +101,31 @@ export type User = {
   messagesCount: Scalars['Int'];
   dateCreated: Scalars['Time'];
   dateUpdated: Scalars['Time'];
+};
+
+export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUsersQuery = (
+  { __typename?: 'Query' }
+  & { allUsers: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username' | 'dateCreated' | 'messagesCount'>
+  )> }
+);
+
+
+export const GetAllUsersDocument = gql`
+    query GetAllUsers {
+  allUsers {
+    id
+    username
+    dateCreated
+    messagesCount
+  }
+}
+    `;
+
+export function useGetAllUsersQuery(options: Omit<Urql.UseQueryArgs<GetAllUsersQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetAllUsersQuery>({ query: GetAllUsersDocument, ...options });
 };

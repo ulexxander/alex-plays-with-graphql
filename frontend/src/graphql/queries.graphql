@@ -1,0 +1,8 @@
+query GetAllUsers {
+  allUsers {
+    id
+    username
+    dateCreated
+    messagesCount
+  }
+}
