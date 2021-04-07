@@ -47,6 +47,13 @@ func (withLog *DBWithLogging) QueryRowContext(ctx context.Context, query string,
 	return withLog.db.QueryRowContext(ctx, query, params...)
 }
 
+func corsMiddleware(next http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		next.ServeHTTP(w, r)
+	}
+}
+
 func run() error {
 	log := logrus.New()
 	log.SetLevel(logrus.TraceLevel)
@@ -73,7 +80,7 @@ func run() error {
 
 	mux := http.NewServeMux()
 
-	mux.Handle("/graphql", handler.NewDefaultServer(schema))
+	mux.Handle("/graphql", corsMiddleware(handler.NewDefaultServer(schema)))
 	mux.Handle("/playground", playground.Handler("GraphQL Playground", "/graphql"))
 
 	server := &http.Server{
